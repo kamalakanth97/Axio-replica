@@ -1,0 +1,6 @@
+{
+  "name": "axio - Expense Tracker",
+  "description": "Smart expense tracker, bank balance manager, SMS expense parser, budget analytics, and bill reminder app inspired by Axio (Walnut).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

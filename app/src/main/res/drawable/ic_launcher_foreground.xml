@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer Shield / Rounded Tile -->
+    <path
+        android:fillColor="#00897B"
+        android:pathData="M54,22 C36.3,22 22,36.3 22,54 C22,71.7 36.3,86 54,86 C71.7,86 86,71.7 86,54 C86,36.3 71.7,22 54,22 Z" />
+    <!-- Inner Accent Glow -->
+    <path
+        android:fillColor="#10B981"
+        android:pathData="M54,28 C39.6,28 28,39.6 28,54 C28,68.4 39.6,80 54,80 C68.4,80 80,68.4 80,54 C80,39.6 68.4,28 54,28 Z" />
+    <!-- Indian Rupee Symbol (₹) in White -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M43,39 L65,39 L65,42.5 L57,42.5 C60.5,44.2 62.5,47.2 62.5,51 L65,51 L65,54.5 L62.2,54.5 C61.5,59.8 57.5,63.5 51.5,64.2 L66,77 L60,77 L46.5,64.5 L46.5,64.2 L43,64.2 L43,61 L51.5,61 C55.2,61 58,58.5 58.5,54.5 L43,54.5 L43,51 L58.3,51 C57.8,47.5 55.2,45.5 51.5,45.5 L43,45.5 L43,39 Z" />
+</vector>
