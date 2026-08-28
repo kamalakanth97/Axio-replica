@@ -49,6 +49,8 @@ class MainActivity : ComponentActivity() {
 
                 val isAddTxnOpen by viewModel.isAddTransactionOpen.collectAsStateWithLifecycle()
                 val isSmsSimOpen by viewModel.isSmsSimulatorOpen.collectAsStateWithLifecycle()
+                val isSyncingSms by viewModel.isSyncingSms.collectAsStateWithLifecycle()
+                val smsSyncSummary by viewModel.smsSyncSummary.collectAsStateWithLifecycle()
                 val isAddAccountOpen by viewModel.isAddAccountOpen.collectAsStateWithLifecycle()
                 val isAddBillOpen by viewModel.isAddBillOpen.collectAsStateWithLifecycle()
                 val isAddSplitOpen by viewModel.isAddSplitOpen.collectAsStateWithLifecycle()
@@ -140,11 +142,14 @@ class MainActivity : ComponentActivity() {
                         }
 
                         if (isSmsSimOpen) {
-                            SmsSimulatorDialog(
+                            SmsSyncDialog(
                                 onDismiss = { viewModel.openSmsSimulator(false) },
+                                onSyncInbox = { viewModel.syncInboxMessages(daysBack = 90) },
                                 onSimulateSms = { sms ->
                                     viewModel.parseAndProcessSms(sms)
-                                }
+                                },
+                                isSyncing = isSyncingSms,
+                                syncSummary = smsSyncSummary
                             )
                         }
 

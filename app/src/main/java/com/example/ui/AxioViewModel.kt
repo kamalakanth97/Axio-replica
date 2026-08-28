@@ -17,8 +17,11 @@ import com.example.data.model.TransactionType
 import com.example.data.repository.AxioRepository
 import com.example.util.ParsedSmsResult
 import com.example.util.SmsExpenseParser
+import com.example.util.SmsInboxScanner
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 data class CategorySpend(
@@ -84,6 +87,12 @@ class AxioViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isSmsSimulatorOpen = MutableStateFlow(false)
     val isSmsSimulatorOpen: StateFlow<Boolean> = _isSmsSimulatorOpen.asStateFlow()
+
+    private val _isSyncingSms = MutableStateFlow(false)
+    val isSyncingSms: StateFlow<Boolean> = _isSyncingSms.asStateFlow()
+
+    private val _smsSyncSummary = MutableStateFlow<String?>(null)
+    val smsSyncSummary: StateFlow<String?> = _smsSyncSummary.asStateFlow()
 
     private val _isAddTransactionOpen = MutableStateFlow(false)
     val isAddTransactionOpen: StateFlow<Boolean> = _isAddTransactionOpen.asStateFlow()
@@ -305,6 +314,51 @@ class AxioViewModel(application: Application) : AndroidViewModel(application) {
 
     fun dismissSmsBanner() {
         _smsBannerMessage.value = null
+    }
+
+    fun syncInboxMessages(daysBack: Int = 90) {
+        viewModelScope.launch {
+            _isSyncingSms.value = true
+            _smsSyncSummary.value = "Reading SMS Inbox..."
+
+            val rawMessages = withContext(Dispatchers.IO) {
+                SmsInboxScanner.readInboxSms(getApplication(), daysBack = daysBack, limit = 500)
+            }
+
+            if (rawMessages.isEmpty()) {
+                _isSyncingSms.value = false
+                _smsSyncSummary.value = "No SMS found or SMS permission was not granted."
+                return@launch
+            }
+
+            var parsedCount = 0
+            var totalExpense = 0.0
+            var totalIncome = 0.0
+
+            withContext(Dispatchers.IO) {
+                for ((sender, body) in rawMessages) {
+                    val parsed = SmsExpenseParser.parseSms(body, sender)
+                    if (parsed != null) {
+                        repository.processParsedSms(parsed)
+                        parsedCount++
+                        if (parsed.type == TransactionType.INCOME) {
+                            totalIncome += parsed.amount
+                        } else {
+                            totalExpense += parsed.amount
+                        }
+                    }
+                }
+            }
+
+            _isSyncingSms.value = false
+            if (parsedCount > 0) {
+                val summary = "✓ Successfully synced $parsedCount transactions (₹${totalExpense.toInt()} spent, ₹${totalIncome.toInt()} income) from ${rawMessages.size} SMS scanned."
+                _smsSyncSummary.value = summary
+                _smsBannerMessage.value = summary
+            } else {
+                _smsSyncSummary.value = "Scanned ${rawMessages.size} messages, but found no bank transaction SMS."
+            }
+        }
     }
 
     fun parseAndProcessSms(smsText: String, sender: String = "") {

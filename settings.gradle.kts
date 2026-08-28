@@ -22,6 +22,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "axio - Expense Tracker"
+rootProject.name = "KaKi Wallet"
 
 include(":app")

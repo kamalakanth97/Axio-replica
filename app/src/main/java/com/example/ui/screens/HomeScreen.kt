@@ -185,7 +185,7 @@ fun HomeTopHeader(
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "axio",
+                    text = "KaKi Wallet",
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = (-0.5).sp
@@ -244,12 +244,12 @@ fun HomeTopHeader(
                 modifier = Modifier.testTag("sms_sync_button")
             ) {
                 Icon(
-                    imageVector = Icons.Default.Sms,
-                    contentDescription = "Simulate SMS",
+                    imageVector = Icons.Default.Sync,
+                    contentDescription = "Sync SMS",
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                Text("SMS", fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                Text("Sync SMS", fontSize = 11.sp, fontWeight = FontWeight.Bold)
             }
         }
     }
